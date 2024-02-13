@@ -1,5 +1,5 @@
-use axum::response::Html;
 use axum::routing::get;
+use axum::{response::Html, Extension};
 use reqwest::{IntoUrl, Url};
 use serde::{Deserialize, Serialize};
 use tera::{Context, Tera};
@@ -23,20 +23,22 @@ async fn main() {
 
     println!("{:#?}", TEMPLATES.get_template_names().collect::<Vec<_>>());
 
+    let docker_client = DockerClient::new("http://localhost:42069");
+
     let app = axum::Router::new()
         .route("/infos", get(render_docker_infos))
-        .route("/", get(render_root));
+        .route("/", get(render_root))
+        .layer(Extension(docker_client));
     axum::serve(listener, app).await.unwrap();
 }
 
-async fn render_docker_infos() -> Html<String> {
-    let client = DockerClient::new("http://localhost:42069");
-    let version = client.version().await;
-    let context = &Context::from_serialize(&version).unwrap();
+async fn render_docker_infos(Extension(docker_client): Extension<DockerClient>) -> Html<String> {
+    let version = docker_client.version().await;
+    let context = Context::from_serialize(&version).unwrap();
 
     println!("{context:#?}");
 
-    let rendered = TEMPLATES.render("infos.html", context).unwrap();
+    let rendered = TEMPLATES.render("infos.html", &context).unwrap();
 
     Html(rendered)
 }
