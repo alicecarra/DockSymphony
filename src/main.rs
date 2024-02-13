@@ -28,6 +28,7 @@ async fn main() {
     let app = axum::Router::new()
         .route("/infos", get(render_docker_infos))
         .route("/", get(render_root))
+        .route("/containers", get(render_containers))
         .layer(Extension(docker_client));
     axum::serve(listener, app).await.unwrap();
 }
@@ -41,6 +42,12 @@ async fn render_docker_infos(Extension(docker_client): Extension<DockerClient>) 
     let rendered = TEMPLATES.render("infos.html", &context).unwrap();
 
     Html(rendered)
+}
+
+async fn render_containers(Extension(docker_client): Extension<DockerClient>) {
+    let containers = docker_client.list_containers().await;
+    println!("{containers:#?}");
+    let context = Context::from_serialize(&containers).unwrap();
 }
 
 async fn render_root() -> Html<String> {
@@ -75,6 +82,20 @@ impl DockerClient {
             .await
             .unwrap()
     }
+
+    async fn list_containers(&self) -> Containers {
+        let url = format!("{}/containers/json", self.api_url);
+        let containers = self
+            .transport
+            .get(url)
+            .send()
+            .await
+            .unwrap()
+            .json::<Vec<Container>>()
+            .await
+            .unwrap();
+        Containers { containers }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -85,4 +106,19 @@ struct Version {
     os: String,
     arch: String,
     kernel_version: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all(deserialize = "PascalCase"))]
+struct Containers {
+    containers: Vec<Container>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all(deserialize = "PascalCase"))]
+struct Container {
+    id: String,
+    names: Vec<String>,
+    state: String,
+    status: String,
 }

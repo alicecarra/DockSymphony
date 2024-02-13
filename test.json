@@ -1,0 +1,101 @@
+[
+  {
+    "Id": "860883b949a7583125f3d99a6fd982fc87e41b9695f193185ad36cdc11a9435b",
+    "Names": ["/sqlserver"],
+    "Image": "ghcr.io/mobiltracker/mobiltracker-data",
+    "ImageID": "sha256:448864e5dfce70b4ac0240bb81b28ad25d209e1dcb9b2a192279e88a9e0f34b4",
+    "Command": "/opt/mssql/bin/permissions_check.sh /bin/sh -c /app/entrypoint.sh",
+    "Created": 1706713088,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 1433,
+        "PublicPort": 1433,
+        "Type": "tcp"
+      },
+      { "IP": "::", "PrivatePort": 1433, "PublicPort": 1433, "Type": "tcp" }
+    ],
+    "Labels": {
+      "com.microsoft.product": "Microsoft SQL Server",
+      "com.microsoft.version": "15.0.4345.5",
+      "org.opencontainers.image.ref.name": "ubuntu",
+      "org.opencontainers.image.version": "20.04",
+      "vendor": "Microsoft"
+    },
+    "State": "running",
+    "Status": "Up 2 hours",
+    "HostConfig": { "NetworkMode": "default" },
+    "NetworkSettings": {
+      "Networks": {
+        "bridge": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "57ca5f1b16fd105ee6bc85ec22962fef2bb450d2a2c9a3d06a7aa875b1113a99",
+          "EndpointID": "e2f9a993ac156d29cba4c1ab209cefc94b21745d7060b95a43da7b57085be335",
+          "Gateway": "172.17.0.1",
+          "IPAddress": "172.17.0.3",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:11:00:03",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": []
+  },
+  {
+    "Id": "bbcea6c7d53bed04f495b6655c2dd3736425f92496b5cb845e60911a33bdef28",
+    "Names": ["/redis"],
+    "Image": "redis:7.0.7",
+    "ImageID": "sha256:5f2e708d56aa0ee930aad29e8d7ca3dd7d39e89a376082df2361cdaa9f8c492b",
+    "Command": "docker-entrypoint.sh redis-server",
+    "Created": 1706530383,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 6379,
+        "PublicPort": 6379,
+        "Type": "tcp"
+      },
+      { "IP": "::", "PrivatePort": 6379, "PublicPort": 6379, "Type": "tcp" }
+    ],
+    "Labels": {},
+    "State": "running",
+    "Status": "Up 2 hours",
+    "HostConfig": { "NetworkMode": "default" },
+    "NetworkSettings": {
+      "Networks": {
+        "bridge": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "57ca5f1b16fd105ee6bc85ec22962fef2bb450d2a2c9a3d06a7aa875b1113a99",
+          "EndpointID": "de4b183b579e0469579987b1f8cb29fed5b6acd81c6468ca7ff9efba6e45352e",
+          "Gateway": "172.17.0.1",
+          "IPAddress": "172.17.0.2",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:11:00:02",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "volume",
+        "Name": "c7eed2da1c91fed2d442ba0065acb8fcfaa532cfaea9ea156161a741499a24e8",
+        "Source": "",
+        "Destination": "/data",
+        "Driver": "local",
+        "Mode": "",
+        "RW": true,
+        "Propagation": ""
+      }
+    ]
+  }
+]
